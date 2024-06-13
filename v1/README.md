@@ -1,15 +1,27 @@
-# ffllm-v1
+# Fantasy Football Chat v1
 
-To install dependencies:
+1. Install ollama
+
+```
+brew install ollama
+```
+
+2. Pull the Llama3 model
+
+```
+ollama pull llama3
+```
+
+3. Install dependencies
+
+[Install bun](https://bun.sh/docs/installation) if it isn't already installed. Then run:
 
 ```bash
 bun install
 ```
 
-To run:
+4. Run with the default prompt
 
 ```bash
 bun run index.ts
 ```
-
-This project was created using `bun init` in bun v1.1.6. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
