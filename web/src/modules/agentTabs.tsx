@@ -10,11 +10,7 @@ import { AddAgent } from "./addAgent";
 export default function AgentTabs() {
   return (
     <div className="flex flex-row">
-      <ToggleGroup
-        type="multiple"
-        onValueChange={() => {}}
-        defaultValue={["a"]}
-      >
+      <ToggleGroup type="multiple" onValueChange={() => {}} defaultValue={[]}>
         <ToggleGroupItem className="text-xl" value="a">
           Agent A
         </ToggleGroupItem>
@@ -27,8 +23,9 @@ export default function AgentTabs() {
       </ToggleGroup>
       <Popover>
         <PopoverTrigger className="p-3">
-          <Plus size={14} className="text-grey-200" />
+          <Plus size={24} className="text-grey-200" />
         </PopoverTrigger>
+        {/* https://www.radix-ui.com/primitives/docs/components/popover#custom-apis */}
         <PopoverContent>
           <AddAgent />
         </PopoverContent>

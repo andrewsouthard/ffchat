@@ -1,13 +1,13 @@
 import "./App.css";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import AgentTabs from "./modules/agentTabs";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "./components/ui/resizable";
+import TasksList from "./modules/tasksList";
 
 export default function App() {
   return (
@@ -18,14 +18,12 @@ export default function App() {
           <Settings size={24} className="text-gray-600" />
         </Button>
       </header>
-      <ResizablePanelGroup direction="horizontal">
+      <ResizablePanelGroup direction="horizontal" className="mt-4">
         <ResizablePanel defaultSize={20} className="p-4">
-          <h2 className="text-2xl">Tasks</h2>
-          <ScrollArea></ScrollArea>
+          <TasksList />
         </ResizablePanel>
-
         <ResizableHandle />
-        <ResizablePanel>
+        <ResizablePanel className="p-2">
           <AgentTabs />
         </ResizablePanel>
       </ResizablePanelGroup>
