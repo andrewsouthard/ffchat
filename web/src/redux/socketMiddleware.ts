@@ -1,17 +1,19 @@
 import { Action, Dispatch, Middleware } from "@reduxjs/toolkit";
 import { Task, addAgentTaskResponse, addUserRequest, selectedTaskSelector } from "./tasksSlice";
-import { Agent, addAgent, removeAgent } from "./agentsSlice";
+import { Agent, addAgent, agentsSelector, removeAgent } from "./agentsSlice";
 
 interface SocketsByAgentId {
-    [key: string]: WebSocket;
+    [key: string]: WebSocket | undefined;
 }
 const socketsByAgentId: SocketsByAgentId = {};
 
 
-function setupSocket(payload: Agent, dispatch: Dispatch) {
+function setupSocket(payload: Agent | undefined, dispatch: Dispatch) {
+    if (!payload) return undefined;
     const socket = new WebSocket(payload.url);
     socket.addEventListener('message', (e) => {
         try {
+            console.log("parsing ", e.data)
             const message = JSON.parse(e.data);
             dispatch(addAgentTaskResponse(message))
         } catch (e) {
@@ -26,6 +28,7 @@ export const socketMiddleware: Middleware = ({ dispatch, getState }) => (next) =
     const { type, payload } = action as Action & { payload: Agent };
     let socket: WebSocket | undefined;
     let task: Task | undefined;
+    let agents: Agent[] | undefined;
 
     switch (type) {
         case addAgent.type:
@@ -35,10 +38,15 @@ export const socketMiddleware: Middleware = ({ dispatch, getState }) => (next) =
 
         case addUserRequest.type:
             task = selectedTaskSelector(getState());
+            agents = agentsSelector(getState())
 
             task.agentStatuses.forEach(as => {
-                if (as.status === 'enabled')
+                if (as.status === 'enabled') {
+                    if (WebSocket.OPEN !== socketsByAgentId[as.agentId]?.readyState) {
+                        socketsByAgentId[as.agentId] = setupSocket(agents?.find(a => a.id === as.agentId), dispatch)
+                    }
                     socketsByAgentId[as.agentId]?.send(JSON.stringify({ message: payload, agentId: as.agentId, taskId: task?.id }))
+                }
             });
             break;
 

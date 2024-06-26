@@ -47,8 +47,10 @@ export const tasksSlice = createSlice({
         setTaskName: (state, action) => {
             state.tasks[state.selectedTaskIdx].name = action.payload
         },
-        deleteTask: (state, action) => {
-            state.tasks = state.tasks.filter(t => t.id !== action.payload)
+        deleteTask: (state) => {
+            state.tasks = state.tasks.filter((_, idx) => idx !== state.selectedTaskIdx)
+            const newSelectedTaskIdx = state.selectedTaskIdx > 0 ? state.selectedTaskIdx - 1 : 0
+            setSelectedTask(state.tasks[newSelectedTaskIdx].id)
         },
         addAgentTaskResponse: (state, action) => {
             const taskIdx = state.tasks.findIndex(t => t.id === action.payload.taskId)

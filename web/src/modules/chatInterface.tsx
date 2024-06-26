@@ -4,10 +4,17 @@ import { Agent, agentsSelector } from "@/redux/agentsSlice";
 import {
   Task,
   addUserRequest,
+  deleteTask,
   selectedTaskSelector,
   setTaskName,
 } from "@/redux/tasksSlice";
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  FormEvent,
+  MouseEventHandler,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function ChatInterface() {
@@ -19,9 +26,9 @@ export default function ChatInterface() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (task.id != currentTaskId) {
-      setCurrentTaskId(task.id);
-      if (task.userRequests.length > 0) {
+    if (task?.id != currentTaskId) {
+      if (task?.id) setCurrentTaskId(task.id);
+      if (task?.userRequests.length > 0) {
         setTaskSent(true);
         setTaskDescription(task.userRequests[0]);
       } else {
@@ -45,39 +52,21 @@ export default function ChatInterface() {
     [task, agents]
   );
 
-  const agentResponsesByAgent = task?.agentsResponses?.reduce(
-    (
-      byAgent: { [key: string]: string[] },
-      response: { agentId: string; message: string }
-    ) => {
-      if (byAgent[response.agentId]) {
-        byAgent[response.agentId].push(response.message);
-      } else {
-        byAgent[response.agentId] = [response.message];
-      }
-      return byAgent;
-    },
-    {} as { [key: string]: string[] }
-  );
-
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(addUserRequest(taskDescription));
     dispatch(setTaskName(taskDescription.substring(0, 40)));
     setTaskSent(true);
   };
+  const onDeleteTask: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    if (confirm("Are you sure you want to delete this task?")) {
+      dispatch(deleteTask());
+    }
+  };
   return (
-    <section className="h-full mr-8">
-      <div className="flex">
-        {agentsWithStatuses.map((agent) => (
-          <div key={agent.id} className="flex-1">
-            {agentResponsesByAgent[agent.id]?.map((r) => (
-              <p>{r}</p>
-            ))}
-          </div>
-        ))}
-      </div>
-      <form className="mt-8 flex flex-col items-end" onSubmit={onSubmit}>
+    <section className="mr-8">
+      <form className="flex flex-col items-end" onSubmit={onSubmit}>
         <Textarea
           className="w-fill"
           name="taskDescription"
@@ -86,18 +75,27 @@ export default function ChatInterface() {
           onChange={(e) => setTaskDescription(e.target.value)}
           disabled={taskSent}
         />
-        <Button
-          className="mt-2"
-          type="submit"
-          disabled={
-            taskDescription.length === 0 ||
-            taskSent ||
-            agentsWithStatuses.filter((a) => a.status === "enabled").length ===
-              0
-          }
-        >
-          Go
-        </Button>
+        <div className="mt-2">
+          <Button className="mr-2" variant="secondary" onClick={onDeleteTask}>
+            Delete Task
+          </Button>
+          {taskSent && (
+            <Button className="mr-2" variant="secondary" type="submit">
+              Resend
+            </Button>
+          )}
+          <Button
+            type="submit"
+            disabled={
+              taskDescription.length === 0 ||
+              taskSent ||
+              agentsWithStatuses.filter((a) => a.status === "enabled")
+                .length === 0
+            }
+          >
+            Go
+          </Button>
+        </div>
       </form>
     </section>
   );
