@@ -1,16 +1,21 @@
 import { createSelector, createSlice, nanoid } from '@reduxjs/toolkit'
+import { addAgent, removeAgent } from './agentsSlice';
 
-export interface AgentState {
+export interface AgentStatus {
     agentId: string;
     status: 'enabled' | 'disabled' | 'locked';
 }
 
+export interface AgentResponse {
+    agentId: string;
+    message: string
+}
 export interface Task {
     id: string;
     name: string;
     userRequests: string[];
-    agentsResponses: { agentId: string, message: string }[];
-    agentStates: AgentState[];
+    agentsResponses: AgentResponse[];
+    agentStatuses: AgentStatus[];
     selected: boolean;
 }
 
@@ -34,7 +39,7 @@ export const tasksSlice = createSlice({
                 name: 'New Task',
                 userRequests: [],
                 agentsResponses: [],
-                agentStates: [],
+                agentStatuses: [],
                 selected: true
             })
             state.selectedTaskIdx = state.tasks.length - 1
@@ -46,13 +51,9 @@ export const tasksSlice = createSlice({
             const taskIdx = state.tasks.findIndex(t => t.id === action.payload.taskId)
             state.tasks[taskIdx].agentsResponses.push({ agentId: action.payload.agentId, message: action.payload.message })
         },
-        changeAgentState: (state, action) => {
-            state.tasks[state.selectedTaskIdx].agentStates = state.tasks[state.selectedTaskIdx].agentStates.map(as => {
-                if (as.agentId !== action.payload.agentId) {
-                    return as;
-                } else {
-                    return { ...as, status: action.payload.status }
-                }
+        toggleAgentsState: (state, action) => {
+            state.tasks[state.selectedTaskIdx].agentStatuses = state.tasks[state.selectedTaskIdx].agentStatuses.map(as => {
+                return { ...as, status: action.payload.includes(as.agentId) ? 'enabled' : 'disabled' }
             })
         },
         addUserRequest: (state, action) => {
@@ -63,10 +64,27 @@ export const tasksSlice = createSlice({
             state.selectedTaskIdx = state.tasks.findIndex(t => t.selected)
         }
     },
+    extraReducers: builder => {
+        builder.addCase(addAgent, (state, action) => {
+            for (let tIdx = 0; tIdx < state.tasks.length; tIdx++) {
+                state.tasks[tIdx].agentStatuses.push({
+                    agentId: action.payload.id,
+                    status: tIdx === state.selectedTaskIdx ? 'enabled' : 'disabled'
+                })
+            }
+        }),
+            builder.addCase(removeAgent, (state, action) => {
+                for (let tIdx = 0; tIdx < state.tasks.length; tIdx++) {
+                    state.tasks[tIdx].agentStatuses =
+                        state.tasks[tIdx].agentStatuses.filter(a => a.agentId === action.payload.id)
+                }
+            })
+    }
 })
 
 // Action creators are generated for each case reducer function
-export const { setSelectedTask, addUserRequest, changeAgentState, addTask, deleteTask } = tasksSlice.actions
-export const tasksSelector = createSelector((state) => state.tasks, (state: { tasks: Task[]; }) => state.tasks)
+export const { setSelectedTask, addUserRequest, toggleAgentsState, addTask, deleteTask, addAgentTaskResponse, } = tasksSlice.actions
+export const tasksSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks)
+export const selectedTaskSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks[state.selectedTaskIdx])
 
 export default tasksSlice.reducer

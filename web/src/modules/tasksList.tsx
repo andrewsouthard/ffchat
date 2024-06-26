@@ -31,10 +31,13 @@ export default function TasksList() {
             <div
               key={task.id}
               onClick={() => onSelectTask(task.id)}
-              className={clsx("border-2 rounded p-2", {
-                "border-primary": task.selected,
-                "border-secondary": !task.selected,
-              })}
+              className={clsx(
+                "border-2 rounded p-2 hover:border-primary cursor-pointer",
+                {
+                  "border-primary": task.selected,
+                  "border-secondary": !task.selected,
+                }
+              )}
             >
               <p className="text-lg">{task.name}</p>
             </div>

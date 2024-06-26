@@ -1,4 +1,5 @@
-import { createDraftSafeSelector, createSlice } from '@reduxjs/toolkit'
+import { createDraftSafeSelector, createSlice, } from '@reduxjs/toolkit'
+import { RootState } from './store';
 
 export interface Agent {
     id: string;
@@ -13,22 +14,31 @@ const initialState: AgentsState = {
     agents: [],
 }
 
+export interface AgentMessage {
+    taskId: string;
+    agentId: string;
+    message: string;
+}
+
 export const agentsSlice = createSlice({
     name: 'agents',
     initialState,
     reducers: {
         addAgent: (state, action) => {
-            state.agents.push(action.payload)
+            state.agents.push({
+                ...action.payload,
+            })
         },
         removeAgent: (state, action) => {
-            state.agents = state.agents.filter(a => a.id !== action.payload)
+            const agentIdx = state.agents.findIndex(a => a.id === action.payload.id)
+            state.agents = state.agents.filter((_, idx) => idx !== agentIdx)
         },
     },
 })
 
 // Action creators are generated for each case reducer function
-export const { addAgent, removeAgent } = agentsSlice.actions
+export const { addAgent, removeAgent } = agentsSlice.actions;
 
 // Need a draft safe selector since this is used within the tasks reducer
-export const agentsSelector = createDraftSafeSelector((state) => state, (state) => state.agents)
-export default agentsSlice.reducer
+export const agentsSelector = createDraftSafeSelector((state: RootState) => state.agents, (state) => state.agents);
+export default agentsSlice.reducer;

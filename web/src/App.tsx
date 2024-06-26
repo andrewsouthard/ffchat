@@ -1,19 +1,19 @@
 import "./App.css";
 import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AgentTabs from "./modules/agentTabs";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "./components/ui/resizable";
 import TasksList from "./modules/tasksList";
+import TaskOverview from "./modules/taskOverview";
 
 export default function App() {
   return (
-    <div>
+    <div className="h-full">
       <header className="flex items-center text-gray-800 justify-start">
-        <h1 className="text-4xl">Agent Face Off 🤖</h1>
+        <h1 className="text-4xl">🤖 Agent Face Off</h1>
         <Button variant="ghost" className="ml-auto">
           <Settings size={24} className="text-gray-600" />
         </Button>
@@ -24,7 +24,7 @@ export default function App() {
         </ResizablePanel>
         <ResizableHandle />
         <ResizablePanel className="p-2">
-          <AgentTabs />
+          <TaskOverview />
         </ResizablePanel>
       </ResizablePanelGroup>
     </div>
