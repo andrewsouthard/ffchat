@@ -44,6 +44,9 @@ export const tasksSlice = createSlice({
             })
             state.selectedTaskIdx = state.tasks.length - 1
         },
+        setTaskName: (state, action) => {
+            state.tasks[state.selectedTaskIdx].name = action.payload
+        },
         deleteTask: (state, action) => {
             state.tasks = state.tasks.filter(t => t.id !== action.payload)
         },
@@ -52,9 +55,16 @@ export const tasksSlice = createSlice({
             state.tasks[taskIdx].agentsResponses.push({ agentId: action.payload.agentId, message: action.payload.message })
         },
         toggleAgentsState: (state, action) => {
-            state.tasks[state.selectedTaskIdx].agentStatuses = state.tasks[state.selectedTaskIdx].agentStatuses.map(as => {
-                return { ...as, status: action.payload.includes(as.agentId) ? 'enabled' : 'disabled' }
-            })
+            if (state.tasks[state.selectedTaskIdx].agentStatuses.length > 0) {
+
+                state.tasks[state.selectedTaskIdx].agentStatuses = state.tasks[state.selectedTaskIdx].agentStatuses.map(as => {
+                    return { ...as, status: action.payload.includes(as.agentId) ? 'enabled' : 'disabled' }
+                })
+            } else {
+                state.tasks[state.selectedTaskIdx].agentStatuses = action.payload.map((agentId: string) => {
+                    return { agentId, status: 'enabled' }
+                })
+            }
         },
         addUserRequest: (state, action) => {
             state.tasks[state.selectedTaskIdx].userRequests.push(action.payload)
@@ -83,7 +93,7 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setSelectedTask, addUserRequest, toggleAgentsState, addTask, deleteTask, addAgentTaskResponse, } = tasksSlice.actions
+export const { setTaskName, setSelectedTask, addUserRequest, toggleAgentsState, addTask, deleteTask, addAgentTaskResponse, } = tasksSlice.actions
 export const tasksSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks)
 export const selectedTaskSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks[state.selectedTaskIdx])
 

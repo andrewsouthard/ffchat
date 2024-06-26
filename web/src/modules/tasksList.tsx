@@ -39,7 +39,9 @@ export default function TasksList() {
                 }
               )}
             >
-              <p className="text-lg">{task.name}</p>
+              <p className="text overflow-ellipsis overflow-hidden whitespace-nowrap">
+                {task.name}
+              </p>
             </div>
           ))}
         </ScrollArea>

@@ -41,22 +41,30 @@ export default function AgentTabs() {
   };
 
   return (
-    <div className="flex flex-row">
+    <div className="w-100 flex flex-row">
       <ToggleGroup
         type="multiple"
         onValueChange={onChangeAgentState}
         value={agentsWithStatuses
           .filter((a) => a.status === "enabled")
           .map((a) => a.id)}
+        className="flex flex-row flex-[10]"
       >
         {agentsWithStatuses.map((agent) => (
-          <ToggleGroupItem className="text-xl" value={agent.id} key={agent.id}>
+          <ToggleGroupItem
+            className="text-xl flex-1"
+            value={agent.id}
+            key={agent.id}
+          >
             {agent.name}
           </ToggleGroupItem>
         ))}
       </ToggleGroup>
       <Popover open={open} onOpenChange={(o) => setOpen(o)}>
-        <PopoverTrigger className="py-2 p-3" onClick={() => setOpen(true)}>
+        <PopoverTrigger
+          className="py-2 p-3 max-w-8 flex-1"
+          onClick={() => setOpen(true)}
+        >
           <Plus size={24} className="text-grey-200 h-9" />
         </PopoverTrigger>
         {/* https://www.radix-ui.com/primitives/docs/components/popover#custom-apis */}

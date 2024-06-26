@@ -18,7 +18,7 @@ function setupSocket(payload: Agent, dispatch: Dispatch) {
             console.error(e)
         }
     });
-    socket.addEventListener('close', () => console.log("connection failed!"))
+    socket.addEventListener('close', () => console.error("connection failed!"))
     return socket;
 }
 
