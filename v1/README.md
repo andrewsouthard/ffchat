@@ -1,4 +1,4 @@
-# Fantasy Football Chat v1
+# Fantasy Football LLM Agent v1
 
 1. Install ollama
 
@@ -20,8 +20,14 @@ ollama pull llama3
 bun install
 ```
 
-4. Run with the default prompt
+4. Run the command line with a question:
 
 ```bash
-bun run index.ts
+bun run cli.ts "Who had the most passing yards in 2023?"
+```
+
+You can also run the server, which opens a web socket connection on port 3000
+
+```bash
+bun run server.ts
 ```
