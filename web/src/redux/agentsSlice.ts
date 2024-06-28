@@ -30,7 +30,7 @@ export const agentsSlice = createSlice({
             })
         },
         removeAgent: (state, action) => {
-            const agentIdx = state.agents.findIndex(a => a.id === action.payload.id)
+            const agentIdx = state.agents.findIndex(a => a.id === action.payload)
             state.agents = state.agents.filter((_, idx) => idx !== agentIdx)
         },
     },

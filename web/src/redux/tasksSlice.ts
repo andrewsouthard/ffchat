@@ -9,6 +9,7 @@ export interface AgentStatus {
 export interface AgentResponse {
     agentId: string;
     message: string
+    createdAt: number;
 }
 export interface Task {
     id: string;
@@ -50,11 +51,12 @@ export const tasksSlice = createSlice({
         deleteTask: (state) => {
             state.tasks = state.tasks.filter((_, idx) => idx !== state.selectedTaskIdx)
             const newSelectedTaskIdx = state.selectedTaskIdx > 0 ? state.selectedTaskIdx - 1 : 0
-            setSelectedTask(state.tasks[newSelectedTaskIdx].id)
+            if (state.tasks.length > 0)
+                setSelectedTask(state.tasks[newSelectedTaskIdx].id)
         },
         addAgentTaskResponse: (state, action) => {
             const taskIdx = state.tasks.findIndex(t => t.id === action.payload.taskId)
-            state.tasks[taskIdx].agentsResponses.push({ agentId: action.payload.agentId, message: action.payload.message })
+            state.tasks[taskIdx].agentsResponses.push({ agentId: action.payload.agentId, message: action.payload.message, createdAt: Math.floor(Date.now() / 1000) })
         },
         toggleAgentsState: (state, action) => {
             if (state.tasks[state.selectedTaskIdx].agentStatuses.length > 0) {
@@ -88,7 +90,7 @@ export const tasksSlice = createSlice({
             builder.addCase(removeAgent, (state, action) => {
                 for (let tIdx = 0; tIdx < state.tasks.length; tIdx++) {
                     state.tasks[tIdx].agentStatuses =
-                        state.tasks[tIdx].agentStatuses.filter(a => a.agentId === action.payload.id)
+                        state.tasks[tIdx].agentStatuses.filter(a => a.agentId === action.payload)
                 }
             })
     }

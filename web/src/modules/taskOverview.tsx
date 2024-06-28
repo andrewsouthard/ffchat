@@ -17,7 +17,7 @@ export default function TaskOverview() {
         {agents?.length > 0 ? (
           <AgentMessages />
         ) : (
-          <div>Next, connect to an agent</div>
+          <div>Connect to an agent</div>
         )}
       </>
     );

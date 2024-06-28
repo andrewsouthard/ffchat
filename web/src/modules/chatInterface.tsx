@@ -79,21 +79,15 @@ export default function ChatInterface() {
           <Button className="mr-2" variant="secondary" onClick={onDeleteTask}>
             Delete Task
           </Button>
-          {taskSent && (
-            <Button className="mr-2" variant="secondary" type="submit">
-              Resend
-            </Button>
-          )}
           <Button
             type="submit"
             disabled={
               taskDescription.length === 0 ||
-              taskSent ||
               agentsWithStatuses.filter((a) => a.status === "enabled")
                 .length === 0
             }
           >
-            Go
+            {taskSent ? "Resend" : "Go"}
           </Button>
         </div>
       </form>

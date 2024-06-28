@@ -13,7 +13,6 @@ function setupSocket(payload: Agent | undefined, dispatch: Dispatch) {
     const socket = new WebSocket(payload.url);
     socket.addEventListener('message', (e) => {
         try {
-            console.log("parsing ", e.data)
             const message = JSON.parse(e.data);
             dispatch(addAgentTaskResponse(message))
         } catch (e) {
