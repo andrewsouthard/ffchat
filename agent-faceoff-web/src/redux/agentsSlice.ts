@@ -40,5 +40,5 @@ export const agentsSlice = createSlice({
 export const { addAgent, removeAgent } = agentsSlice.actions;
 
 // Need a draft safe selector since this is used within the tasks reducer
-export const agentsSelector = createDraftSafeSelector((state: RootState) => state.agents, (state) => state.agents);
+export const agentsSelector = createDraftSafeSelector((state: RootState) => state?.agents, (state) => state?.agents);
 export default agentsSlice.reducer;
