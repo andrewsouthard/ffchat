@@ -12,7 +12,7 @@ export default function App() {
   return (
     <div className="h-full">
       <header className="flex items-center text-gray-800 justify-start">
-        <h1 className="text-4xl">🤖 Agent Face Off</h1>
+        <h1 className="text-4xl">🤖 Agent FaceOff</h1>
         <SettingsSheet />
       </header>
       <ResizablePanelGroup direction="horizontal" className="mt-4">

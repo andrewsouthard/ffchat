@@ -1,5 +1,6 @@
-import { createSelector, createSlice, nanoid } from '@reduxjs/toolkit'
-import { addAgent, removeAgent } from './agentsSlice';
+import { createSelector, createAsyncThunk, createSlice, nanoid } from '@reduxjs/toolkit'
+import { addAgent, agentsSelector, removeAgent } from './agentsSlice';
+import { RootState } from './store';
 
 export interface AgentStatus {
     agentId: string;
@@ -29,19 +30,27 @@ const initialState: TasksState = {
     selectedTaskIdx: 0,
     tasks: [],
 }
+export const addNewTask = createAsyncThunk('tasks/addNewTask', (_, { getState, dispatch }) => {
+    const agents = agentsSelector(getState() as RootState)
+    const newTask = {
+        name: 'New Task',
+        userRequests: [],
+        agentsResponses: [],
+        agentStatuses: agents.map(a => ({ agentId: a.id, status: 'enabled' })),
+    }
+    dispatch(tasksSlice.actions.addTask(newTask))
+})
+
 
 export const tasksSlice = createSlice({
     name: 'tasks',
     initialState,
     reducers: {
-        addTask: (state) => {
+        addTask: (state, action) => {
             state.tasks = state.tasks.map(t => ({ ...t, selected: false })).concat({
                 id: nanoid(),
-                name: 'New Task',
-                userRequests: [],
-                agentsResponses: [],
-                agentStatuses: [],
-                selected: true
+                selected: true,
+                ...action.payload
             })
             state.selectedTaskIdx = state.tasks.length - 1
         },
@@ -57,6 +66,11 @@ export const tasksSlice = createSlice({
         addAgentTaskResponse: (state, action) => {
             const taskIdx = state.tasks.findIndex(t => t.id === action.payload.taskId)
             state.tasks[taskIdx].agentsResponses.push({ agentId: action.payload.agentId, message: action.payload.message, createdAt: Math.floor(Date.now() / 1000) })
+        },
+        clearAgentTaskResponses: (state) => {
+            const activeAgentIds = state.tasks[state.selectedTaskIdx].agentStatuses.filter(a => a.status === 'enabled').map(a => a.agentId)
+            state.tasks[state.selectedTaskIdx].agentsResponses =
+                state.tasks[state.selectedTaskIdx].agentsResponses.filter(r => !activeAgentIds.includes(r.agentId))
         },
         toggleAgentsState: (state, action) => {
             if (state.tasks[state.selectedTaskIdx].agentStatuses.length > 0) {
@@ -97,7 +111,7 @@ export const tasksSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setTaskName, setSelectedTask, addUserRequest, toggleAgentsState, addTask, deleteTask, addAgentTaskResponse, } = tasksSlice.actions
+export const { setTaskName, setSelectedTask, addUserRequest, toggleAgentsState, deleteTask, addAgentTaskResponse, clearAgentTaskResponses } = tasksSlice.actions
 export const tasksSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks)
 export const selectedTaskSelector = createSelector((state) => state.tasks, (state: TasksState) => state.tasks[state.selectedTaskIdx])
 

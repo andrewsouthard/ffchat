@@ -4,6 +4,7 @@ import { Agent, agentsSelector } from "@/redux/agentsSlice";
 import {
   Task,
   addUserRequest,
+  clearAgentTaskResponses,
   deleteTask,
   selectedTaskSelector,
   setTaskName,
@@ -54,8 +55,13 @@ export default function ChatInterface() {
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // If resending, clear the old response
+    if (taskSent) {
+      dispatch(clearAgentTaskResponses());
+    }
     dispatch(addUserRequest(taskDescription));
     dispatch(setTaskName(taskDescription.substring(0, 40)));
+
     setTaskSent(true);
   };
   const onDeleteTask: MouseEventHandler<HTMLButtonElement> = (e) => {

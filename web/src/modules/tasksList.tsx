@@ -2,19 +2,20 @@ import clsx from "clsx";
 import { Button } from "@/components/ui/button";
 import {
   Task,
-  addTask,
+  addNewTask,
   setSelectedTask,
   tasksSelector,
 } from "@/redux/tasksSlice";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Plus } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
 
 export default function TasksList() {
   const tasks = useSelector(tasksSelector);
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
 
-  const onAddTask = () => dispatch(addTask());
+  const onAddTask = () => dispatch(addNewTask());
   const onSelectTask = (taskId: string) => dispatch(setSelectedTask(taskId));
 
   return (
