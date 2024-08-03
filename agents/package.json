@@ -4,7 +4,8 @@
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "ollama": "^0.5.1"
+    "ollama": "^0.5.1",
+    "openai": "^4.54.0"
   },
   "devDependencies": {
     "@types/bun": "latest"

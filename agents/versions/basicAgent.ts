@@ -1,12 +1,6 @@
 import { Database } from "bun:sqlite";
-import { callLLM, getTableDefinitions, queryDB } from "../helpers"
+import { addMessage, callLLM, getTableDefinitions, queryDB } from "../helpers"
 import type { Message } from "../types"
-
-
-function addMessage(messages: Message[], content: string) {
-	return messages.concat({ role: 'user', content })
-}
-
 
 
 async function fixFailure(messages: Message[], query: string, error: string, onMessageCallback: Function) {

@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { callLLM, getTableDefinitions, queryDB } from "../helpers";
+import { callLLM, extractQueryFromMarkdown, getTableDefinitions, queryDB } from "../helpers";
 
 export default async function askAgent(question: string, db: Database, onMessageCallback: Function) {
     const tables = getTableDefinitions(db)
@@ -18,7 +18,7 @@ export default async function askAgent(question: string, db: Database, onMessage
     ` }
     try {
         const llmResult = await callLLM([userMessage], onMessageCallback)
-        const query = extractQuery(llmResult);
+        const query = extractQueryFromMarkdown(llmResult);
         const result = queryDB(db, query)
         onMessageCallback(`Query: ${query}`)
         onMessageCallback(`Result:`)
@@ -27,10 +27,7 @@ export default async function askAgent(question: string, db: Database, onMessage
         onMessageCallback("Error: " + e)
     }
 }
-function extractQuery(result: String) {
-    const query = result.split('```')[1]
-    return query.replace(/^sql/, "").trim();
-}
+
 
 const examples = [
     {

@@ -1,6 +1,7 @@
 import { Database } from "bun:sqlite";
 import basicAgent from "./versions/basicAgent";
 import nShot from "./versions/nShotAgent"
+import c3Agent from "./versions/c3Agent"
 
 const STATS_DB = "2023-data.db"
 
@@ -14,14 +15,18 @@ const agents = [
         name: 'nshot',
         askAgent: nShot,
         port: 3002,
-
+    },
+    {
+        name: 'c3',
+        askAgent: c3Agent,
+        port: 3003
     }
 ]
 
 const db = new Database(STATS_DB, { readonly: true });
 
 const options = Bun.argv.slice(2)
-const parsedOptions: Record<string, string | boolean> = {}
+const parsedOptions: Record<string, string | undefined> = {}
 
 for (let i = 0; i < options.length; i++) {
     const arg = options[i];
@@ -31,7 +36,7 @@ for (let i = 0; i < options.length; i++) {
             parsedOptions[key] = options[i + 1];
             i++; // Skip the next argument as it's the value
         } else {
-            parsedOptions[key] = true; // Flag option without value
+            parsedOptions[key] = undefined; // Flag option without value
         }
     }
 }
@@ -60,7 +65,9 @@ const server = Bun.serve<{ authToken: string }>({
             console.log(`Received ${request}`);
 
             const agentMessage = JSON.parse(request as string)
-            await selectedAgent.askAgent(agentMessage.message, db, (m: string) => ws.send(JSON.stringify({ ...agentMessage, message: m })))
+            const onMessageCallback = (m: string) => ws.send(JSON.stringify({ ...agentMessage, message: m }))
+            const model = parsedOptions['model']
+            await selectedAgent.askAgent(agentMessage.message, db, onMessageCallback, model)
 
         },
     }
