@@ -1,0 +1,14 @@
+Create a simple step by step plan to answer the question below. If you figure out the results of a step, don't list the step. Instead add that data to the next step. Combine any steps when it makes sense and uses the same tool. When you need to do math operations, include those in the SQL query.  If the question asks about fantasy points or scoring, assume standard scoring unless PPR is specified. Assume the database is connected and the current NFL season is 2024. You have the following tools available:
+Tool: nfl stats database
+Description: An sqlite database that includes player stats and fantasy football scores over the past 30 seasons.
+
+Tool: LLM agent
+Description: A large language model capable of simple reasoning and summarizing results.
+
+For each step, list any tools needed to complete the step.
+
+"Which wide receivers had the highest average fantasy points for the past two seasons?"
+
+----
+
+think step-by-step to get a better understanding of the problem.

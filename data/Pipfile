@@ -1,0 +1,16 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+nfl-data-py = "*"
+#tensorflow = "*"
+pandas = "*"
+numpy = "*"
+#"matplotlib" = "*"
+python-snappy = "*"
+
+[dev-packages]
+#[requires]
+#python_version = "3.9"

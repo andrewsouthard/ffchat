@@ -47,7 +47,10 @@ export default function AgentMessages() {
         {agentsWithStatuses.map((agent) => (
           <div key={agent.id} className="flex-1 text-left max-w-full">
             {agentResponsesByAgent?.[agent.id]?.map((r, idx) => (
-              <div key={idx.toString()} className="text-wrap break-words group">
+              <div
+                key={idx.toString()}
+                className="text-wrap break-words group max-w-[100%]"
+              >
                 <p>{r.message?.toString()}</p>
                 <p className="text-xs text-gray-400 text-right opacity-0 group-hover:delay-500 group-hover:opacity-100 transition-opacity duration-300">
                   {new Date(r?.createdAt * 1000).toLocaleString()}

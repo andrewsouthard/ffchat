@@ -1,0 +1,29 @@
+  [
+    {
+	
+    "question": "How many total yards did Josh Allen pass for in 2023?",
+    "answer": [
+	{
+	  "tableName": "players",
+   	  "columns": ["id", "name"]
+ 	},
+	{
+	  "tableName": "stats_by_game",
+	  "columns": ["passing_yards","season", "season_type", "player_id"]
+	}
+    ]
+  },
+  {
+    "question": "Which wide receivers had the highest average fantasy points for the past two seasons?",
+    "answer": [
+	{
+	  "tableName": "players",
+   	  "columns": ["id", "name"]
+ 	},
+	{
+	  "tableName": "stats_by_game",
+	  "columns": ["fantasy_points","season", "season_type", "player_id"]
+	}
+    ]
+  }
+]
