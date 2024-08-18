@@ -66,3 +66,8 @@ export function extractQueryFromMarkdown(result: string | null) {
         return result
     }
 }
+
+export function limitQuery(query: string, limit: number = 20) {
+    if (query.toLowerCase().includes("limit")) return query;
+    return query.replace(";", '') + ` LIMIT ${limit};`
+}
