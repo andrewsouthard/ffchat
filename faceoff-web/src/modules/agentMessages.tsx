@@ -1,12 +1,13 @@
 import { Agent, agentsSelector } from "@/redux/agentsSlice";
 import { AgentResponse, Task, selectedTaskSelector } from "@/redux/tasksSlice";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Separator } from "@/components/ui/separator";
 
 export default function AgentMessages() {
   const task: Task = useSelector(selectedTaskSelector);
   const agents = useSelector(agentsSelector);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const agentsWithStatuses: (Agent & { status: string })[] = useMemo(
     () =>
@@ -41,9 +42,15 @@ export default function AgentMessages() {
     [task]
   );
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [agentResponsesByAgent]);
+
   return (
     <section className="h-fill mr-8 mt-auto">
-      <div className="flex max-h-full overflow-y-scroll">
+      <div ref={scrollRef} className="flex max-h-[70vh] overflow-y-scroll">
         {agentsWithStatuses.map((agent) => (
           <div key={agent.id} className="flex-1 text-left max-w-full">
             {agentResponsesByAgent?.[agent.id]?.map((r, idx) => (

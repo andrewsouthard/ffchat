@@ -71,7 +71,7 @@ export default function ChatInterface() {
     }
   };
   return (
-    <section className="mr-8">
+    <section className="mr-8 pt-4">
       <form className="flex flex-col items-end" onSubmit={onSubmit}>
         <Textarea
           className="w-fill"
