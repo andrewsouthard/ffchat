@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import { callLLM, extractQueryFromMarkdown, getTableDefinitions, queryDB, limitQuery } from "../helpers";
 
-export default async function askAgent(question: string, db: Database, onMessageCallback: Function) {
+export default async function askAgent(question: string, db: Database, onMessageCallback: Function, model: string) {
     const tables = getTableDefinitions(db)
     const systemMessage = {
         role: 'system',
@@ -11,13 +11,17 @@ export default async function askAgent(question: string, db: Database, onMessage
     const examplesToUse: string = examples.map(e => `Question: ${e.question}\nAnswer: ${e.answer}\n`).join("\n")
 
     const userMessage = {
-        role: 'user', content: `Write an sqlite query to answer the following question: 
-    ${question}
-    Think step by step. Verify each column that is used exists in the schema. Some example queries for reference are:
-   ${examplesToUse}
-    ` }
+        role: 'user',
+        content: `Using the following examples for guidance: 
+        ${examplesToUse}
+        
+        Write an sqlite query to answer the following question: 
+        ${question}
+        
+        Think step by step. Verify each column that is used exists in the schema.`
+    }
     try {
-        const llmResult = await callLLM([systemMessage, userMessage], onMessageCallback)
+        const llmResult = await callLLM([systemMessage, userMessage], onMessageCallback, model)
         const query = extractQueryFromMarkdown(llmResult);
         const result = queryDB(db, limitQuery(query))
         onMessageCallback(`Query: ${query}`)

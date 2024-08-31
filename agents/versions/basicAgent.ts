@@ -32,7 +32,7 @@ async function iterateToAnswer(db: Database, initialMessages: Message[], onMessa
 
 }
 
-export default async function askAgent(question: string, db: Database, onMessageCallback: Function) {
+export default async function askAgent(question: string, db: Database, onMessageCallback: Function, model?: string) {
 	const tables = getTableDefinitions(db)
 	const systemMessage = {
 		role: 'system',
@@ -41,7 +41,7 @@ export default async function askAgent(question: string, db: Database, onMessage
 
 	const userMessage = { role: 'user', content: `Write an SQLite query to answer the following question: ${question} Verify each column that is used exists in the schema. Only return a valid sqlite query without any explanation or reasoning.` }
 	try {
-		const sqlQuery = await callLLM([systemMessage, userMessage], onMessageCallback);
+		const sqlQuery = await callLLM([systemMessage, userMessage], onMessageCallback, model);
 		const result = queryDB(db, sqlQuery)
 		// const [sqlQuery, result] = await iterateToAnswer(db, [systemMessage, userMessage], onMessageCallback)
 		onMessageCallback(`Query: ${sqlQuery}`)
