@@ -42,8 +42,8 @@ export default function AgentMessages() {
   );
 
   return (
-    <section className="h-full mr-8">
-      <div className="flex">
+    <section className="h-fill mr-8 mt-auto">
+      <div className="flex max-h-full overflow-y-scroll">
         {agentsWithStatuses.map((agent) => (
           <div key={agent.id} className="flex-1 text-left max-w-full">
             {agentResponsesByAgent?.[agent.id]?.map((r, idx) => (

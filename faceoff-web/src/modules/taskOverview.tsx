@@ -12,13 +12,13 @@ export default function TaskOverview() {
   if (tasks.length > 0) {
     return (
       <>
-        {agents?.length > 0 && <ChatInterface />}
         <AgentTabs />
         {agents?.length > 0 ? (
           <AgentMessages />
         ) : (
           <div>Connect to an agent</div>
         )}
+        {agents?.length > 0 && <ChatInterface />}
       </>
     );
   } else {

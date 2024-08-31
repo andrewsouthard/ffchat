@@ -20,7 +20,7 @@ export default function App() {
           <TasksList />
         </ResizablePanel>
         <ResizableHandle />
-        <ResizablePanel className="p-2">
+        <ResizablePanel className="p-2 h-[90vh] flex flex-col">
           <TaskOverview />
         </ResizablePanel>
       </ResizablePanelGroup>

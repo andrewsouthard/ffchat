@@ -79,7 +79,6 @@ export default function ChatInterface() {
           placeholder="Describe your task"
           value={taskDescription}
           onChange={(e) => setTaskDescription(e.target.value)}
-          disabled={taskSent}
         />
         <div className="mt-2">
           <Button className="mr-2" variant="secondary" onClick={onDeleteTask}>
