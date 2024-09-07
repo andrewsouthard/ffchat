@@ -70,6 +70,7 @@ SELECT`
 		onMessageCallback(`Query: ${sqlQuery}`)
 		onMessageCallback(`Result:`)
 		onMessageCallback(JSON.stringify(result))
+		return { query: sqlQuery, result };
 	} catch (e) {
 		onMessageCallback("Error: " + e)
 	}

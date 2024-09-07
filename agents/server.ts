@@ -1,33 +1,5 @@
 import { Database } from "bun:sqlite";
-import basicAgent from "./versions/basicAgent";
-import nShot from "./versions/nShotAgent"
-import c3Agent from "./versions/c3Agent"
-import cotAgent from "./versions/cotAgent"
-
-const STATS_DB = "2023-data.db"
-
-const agents = [
-    {
-        name: 'basic',
-        askAgent: basicAgent,
-        port: 3001,
-    },
-    {
-        name: 'nshot',
-        askAgent: nShot,
-        port: 3002,
-    },
-    {
-        name: 'c3',
-        askAgent: c3Agent,
-        port: 3003
-    },
-    {
-        name: 'cot',
-        askAgent: cotAgent,
-        port: 3004
-    }
-]
+import { AGENTS, STATS_DB } from "./constants";
 
 const db = new Database(STATS_DB, { readonly: true });
 
@@ -46,9 +18,9 @@ for (let i = 0; i < options.length; i++) {
         }
     }
 }
-let selectedAgent = agents[0]
+let selectedAgent = AGENTS[0]
 if (parsedOptions['agent']) {
-    selectedAgent = agents.find(a => a.name === parsedOptions['agent']) ?? agents[0]
+    selectedAgent = AGENTS.find(a => a.name === parsedOptions['agent']) ?? AGENTS[0]
 }
 
 const server = Bun.serve<{ authToken: string }>({
@@ -72,7 +44,7 @@ const server = Bun.serve<{ authToken: string }>({
 
             const agentMessage = JSON.parse(request as string)
             const onMessageCallback = (m: string) => ws.send(JSON.stringify({ ...agentMessage, message: m }))
-            const model = parsedOptions['model']
+            const model = parsedOptions['model'] ?? "ollama"
             await selectedAgent.askAgent(agentMessage.message, db, onMessageCallback, model)
 
         },

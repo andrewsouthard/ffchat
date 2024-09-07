@@ -27,6 +27,7 @@ export default async function askAgent(question: string, db: Database, onMessage
         onMessageCallback(`Query: ${query}`)
         onMessageCallback(`Result:`)
         onMessageCallback(JSON.stringify(result))
+        return { query, result };
     } catch (e) {
         onMessageCallback("Error: " + e)
 

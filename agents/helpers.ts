@@ -20,7 +20,7 @@ export async function callLLM(messages: Message[], onMessageCallback: Function, 
     }
 
     onMessageCallback(`LLM responded with: ${response}`)
-    return response
+    return response ?? ""
 }
 
 async function callOpenAI(messages: ChatCompletionToolMessageParam[], onMessageCallback: Function) {

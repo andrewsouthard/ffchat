@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { addMessage, callLLM, getTableDefinitions, queryDB } from "../helpers"
+import { addMessage, callLLM, getTableDefinitions, limitQuery, queryDB } from "../helpers"
 import type { Message } from "../types"
 
 
@@ -42,11 +42,12 @@ export default async function askAgent(question: string, db: Database, onMessage
 	const userMessage = { role: 'user', content: `Write an SQLite query to answer the following question: ${question} Verify each column that is used exists in the schema. Only return a valid sqlite query without any explanation or reasoning.` }
 	try {
 		const sqlQuery = await callLLM([systemMessage, userMessage], onMessageCallback, model);
-		const result = queryDB(db, sqlQuery)
+		const result = queryDB(db, limitQuery(sqlQuery))
 		// const [sqlQuery, result] = await iterateToAnswer(db, [systemMessage, userMessage], onMessageCallback)
 		onMessageCallback(`Query: ${sqlQuery}`)
 		onMessageCallback(`Result:`)
 		onMessageCallback(JSON.stringify(result))
+		return { query: sqlQuery, result };
 	} catch (e) {
 		onMessageCallback("Error: " + e)
 	}

@@ -34,6 +34,7 @@ export default async function askAgent(question: string, db: Database, onMessage
         onMessageCallback(`Query: ${scQuery}`)
         onMessageCallback(`Result:`)
         onMessageCallback(JSON.stringify(llmJudgeResult))
+        return { query: scQuery, result: llmJudgeResult };
     } catch (e) {
         onMessageCallback("Error: " + e)
 

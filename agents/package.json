@@ -2,7 +2,10 @@
   "name": "ffllm-v1",
   "version": "1.0.0",
   "main": "index.ts",
-  "license": "MIT",
+  "scripts": {
+    "test": "bun test --timeout 20000",
+    "test:watch": "bun test --watch"
+  },
   "dependencies": {
     "ollama": "^0.5.1",
     "openai": "^4.54.0"
@@ -10,6 +13,7 @@
   "devDependencies": {
     "@types/bun": "latest"
   },
+  "packageManager": "yarn@4.4.1",
   "peerDependencies": {
     "typescript": "^5.0.0"
   }
