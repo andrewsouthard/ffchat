@@ -13,7 +13,7 @@ export function addMessage(messages: Message[], content: string) {
 
 export async function callLLM(messages: Message[], onMessageCallback: Function, model?: string) {
     let response;
-    if (model === 'chatgpt') {
+    if (model === 'gpt') {
         response = await callOpenAI(messages as ChatCompletionToolMessageParam[], onMessageCallback)
     } else {
         response = await callOllama(messages, onMessageCallback)
@@ -28,6 +28,7 @@ async function callOpenAI(messages: ChatCompletionToolMessageParam[], onMessageC
     const chatCompletion = await client.chat.completions.create({
         messages: messages,
         model: 'gpt-4o-mini-2024-07-18',
+        // model: 'gpt-4o',
     });
 
     return chatCompletion.choices[0].message?.content

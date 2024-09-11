@@ -1,7 +1,7 @@
 import { Database } from "bun:sqlite";
 import { callLLM, extractQueryFromMarkdown, getTableDefinitions, queryDB } from "../helpers";
 
-export default async function askAgent(question: string, db: Database, onMessageCallback: Function) {
+export default async function askAgent(question: string, db: Database, onMessageCallback: Function, model?: string) {
     const tables = getTableDefinitions(db)
     const systemMessage = {
         role: 'system',
@@ -17,7 +17,7 @@ export default async function askAgent(question: string, db: Database, onMessage
    ${examplesToUse}
     ` }
     try {
-        const llmResult = await callLLM([userMessage], onMessageCallback)
+        const llmResult = await callLLM([userMessage], onMessageCallback, model)
         const query = extractQueryFromMarkdown(llmResult);
         const result = queryDB(db, query)
         onMessageCallback(`Query: ${query}`)
